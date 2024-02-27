@@ -1,0 +1,154 @@
+---
+import { events } from '../../../lib/data'
+import { createFilterParams } from '../../services/createFilterParams'
+import { capitalizeFirstLetter } from '../../services/capitalizeFirstLetter'
+
+import Layout from '../../layouts/Layout.astro'
+import FiltereEventsPresent from '../../components/FiltereEventsPresent.astro'
+
+export function getStaticPaths () {
+  return createFilterParams(events)
+}
+
+const a = createFilterParams(events)
+// console.log(a)
+
+const {year, month, city, location, tag} = Astro.params
+// RUTA: /search/all-all-all-all-all
+// Filtramos los eventos con los parametros
+const filterEvents = events.filter(e => {
+  let controlYear = false
+  if (year === 'all') {
+    controlYear = true
+  } else {
+    const startDate = new Date(e.dateStart)
+    controlYear = startDate.getFullYear().toString() === year.toString()
+  }
+
+  let controlMonth = false
+  if (month === 'all') {
+    controlMonth = true
+  } else {
+    const startDate = new Date(e.dateStart)
+    controlMonth = (startDate.getMonth() + 1).toString() === month.toString()
+  }
+
+  let controlCity = false
+  if (city === 'all') {
+    controlCity = true
+  } else {
+    controlCity = e.city.toLowerCase() === city.toLowerCase()
+  }
+
+  let controlLocation = false
+  if (location === 'all') {
+    controlLocation = true
+  } else {
+    controlLocation = e.location.toLowerCase() === location.toLowerCase()
+  }
+
+  let controlTag = false
+  if (tag === 'all') {
+    controlTag = true
+  } else {
+    const tagsNormalized = e.tags.map(t => t.toLowerCase())
+    controlTag = tagsNormalized.includes(tag)
+  }
+
+  return controlYear && controlMonth && controlCity && controlLocation && controlTag
+})
+
+
+// TODO LO DEL FORMULARIO DE FILTROS
+import { capitalizeAllFirstLetter } from '../../services/capitalizeFirstLetter'
+
+import { obtainAllYears } from '../../services/obtainAllYears'
+import { obtainAllMonths } from '../../services/obtainAllMonths'
+import { obtainAllCitys } from '../../services/obtainAllCitys'
+import { obtainAllLocations } from '../../services/obtainAllLocations'
+import { obtainAllTags } from '../../services/obtainAllTags'
+import { obtainLocationsFromCity } from '../../services/obtainLocationsFromCity'
+
+const allYears = obtainAllYears(events)
+const allMonths = obtainAllMonths(events)
+const allCitys = obtainAllCitys(events)
+const allLocations = obtainAllLocations(events)
+const allTags = obtainAllTags(events)
+
+allYears.push('all')
+allMonths.push('all')
+allCitys.push('all')
+allLocations.push('all')
+allTags.push('all')
+---
+
+<Layout title='Pagina Eventos | Busqueda'>
+  <section>
+    <h1 class="text-white text-3xl font-bold">Filtros</h1>
+    <label for="year">Año del evento: </label>
+    <select name="year" id="year-select">
+      {
+        allYears.map(year => {
+          if (year === 'all') {
+            return <option value="all" selected>Todos</option>
+          } else {
+            return <option value={year}>{year}</option>
+          }
+        })
+      }
+    </select>
+    <label for="month">Mes del evento: </label>
+    <select name="month" id="month-select">
+      {
+        allMonths.map(month => {
+          if (month === 'all') {
+            return <option value="all" selected>Todos</option>
+          } else {
+            const m = new Date()
+            m.setMonth(parseInt(month) - 1)
+            return <option value={month}>{capitalizeFirstLetter(m.toLocaleString('es-ES', {month: 'long'}))}</option>
+          }
+        })
+      }
+    </select>
+    <label for="city">Ciudad:</label>
+    <select name="city" id="city-select">
+      {
+        allCitys.map(city => {
+          if (city === 'all') {
+            return <option value="all" selected>Todas</option>
+          } else {
+            return <option value={city}>{capitalizeAllFirstLetter(city)}</option>
+          }
+        })
+      }
+    </select>
+    <label for="location">Locacion:</label>
+    <select name="location" id="location-select">
+      {
+        allLocations.map(location => {
+          if (location === 'all') {
+            return <option value="all" selected>Todas</option>
+          } else {
+            return <option value={location}>{capitalizeAllFirstLetter(location)}</option>
+          }
+        })
+      }
+    </select>
+    
+  </section>
+  <FiltereEventsPresent title={capitalizeFirstLetter(tag)} events={filterEvents} />
+</Layout>
+
+
+
+<!-- TAMBIEN DE LOS FILTROS -->
+<script>
+  const citySelect = document.getElementById('city-select')
+  const locationSelect = document.getElementById('location-select')
+
+  citySelect?.addEventListener('change', () => {
+    let actualCity
+    
+  })
+</script>

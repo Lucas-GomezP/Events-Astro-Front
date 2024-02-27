@@ -1,0 +1,115 @@
+---
+import { events } from '../../../lib/data'
+import { type Event } from '../../../lib/data'
+import { obtainEventsId } from '../../services/obtainEventsId'
+import { dateFormatedText } from '../../services/dateFormat'
+
+import Layout from '../../layouts/Layout.astro'
+import LocationIcon from '../../icons/LocationIcon.astro'
+import DescriptionIcon from '../../icons/DescriptionIcon.astro'
+import InfoIcon from '../../icons/InfoIcon.astro'
+
+// interface Props {
+//   id: string
+// }
+// const {id} = Astro.props
+
+const {id: eventId} = Astro.params
+
+const event = events.find(e => e.id === eventId)
+
+export const getStaticPaths = (() => {
+  const eventsId = obtainEventsId(events)
+  let routes: any[] = []
+  eventsId.forEach(id => {
+    routes.push({params: {'id': id}})
+  })
+  return routes
+})
+
+// Formateo de los datos para presentarlos
+const {id, name, href, dateStart, dateEnd, hourStart, hourEnd, description, tags, location, city, about} = event as Event
+
+const { startDateFormated, endDateFormated } = dateFormatedText(dateStart, dateEnd)
+---
+
+<Layout title={`Pagina Eventos | ${name}`}>
+  <div
+  class="relative max-h-96 w-full"
+  >
+    <div
+      class="relative h-full flex justify-center"
+      
+    >
+      <img 
+        src={href} 
+        alt=""
+        class="absolute top-0 blur-md object-fill w-full h-full z-10 p-4"
+      >
+      <img 
+      src={href} 
+      alt={href}
+      class="relative object-contain h-96 z-20 items-center"
+      >
+    </div>
+  </div>
+  
+  <section class="max-w-[750px] m-auto pt-4 flex flex-col gap-4">
+    <header>
+      <h1 class="font-bold text-white text-3xl">{name}</h1>
+      <p class="text-zinc-400 text-xl">
+        {
+          startDateFormated === endDateFormated 
+            ? `El ${startDateFormated}`
+            : `Del ${startDateFormated} al ${endDateFormated}`
+        }
+        , {hourStart}hs
+      </p>
+    </header>
+    <div class="flex gap-2 flex-wrap">
+      {
+        tags.map(tag => {
+          return(
+            <a 
+              href={`/search/${tag.toLowerCase()}`} 
+              class="text-white bg-zinc-700/50 p-2 rounded-xl border-2 border-transparent hover:border-zinc-700/50 hover:bg-zinc-200 hover:text-zinc-700"
+            >
+              {tag}
+            </a>
+          )
+        })
+      }
+    </div>
+    <div>
+      <h2 class="text-white font-semibold flex items-center text-xl gap-2"><LocationIcon /> Locación</h2>
+      <div class="flex gap-2 text-zinc-400">
+        <a 
+          href={`/search/${location.toLowerCase()}`}
+          class=" hover:text-white underline"
+        >
+          {location}
+        </a>
+        <a 
+          href={`/search/${city.toLowerCase()}`}
+          class="text-zinc-400 hover:text-white underline"
+        >
+          {city}
+        </a>
+      </div>
+    </div>
+    <div>
+      <h2 class="text-white font-semibold flex items-center text-xl gap-2"><DescriptionIcon /> Descripción</h2>
+      <p class="text-white/80">{description}</p>
+    </div>
+    <div>
+      <h2 class="text-white font-semibold flex items-center text-xl gap-2"><InfoIcon /> Más información</h2>
+      <ul class="text-white/80 list-disc pl-6">
+        {about.map(a => {
+          return (
+            <li>{a}</li>
+          )
+        })}
+      </ul>
+    </div>
+  </section>
+</Layout>

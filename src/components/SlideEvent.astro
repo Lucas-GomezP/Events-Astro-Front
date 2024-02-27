@@ -1,0 +1,28 @@
+---
+import type {Event} from '../../lib/data.ts'
+
+interface Props {
+  event: Event,
+  index: number
+}
+
+const {event, index} = Astro.props
+const {id, href, name, dateStart, dateEnd, hourStart, hourEnd, description} = event
+---
+
+<div
+  class="relative h-full justify-center hidden"
+  data-slide-index={index}
+  data-type="slide"
+>
+  <img 
+    src={href} 
+    alt=""
+    class="absolute top-0 blur-md object-fill w-full h-full z-10 p-4"
+  >
+  <img 
+  src={href} 
+  alt={name}
+  class="relative object-contain h-96 z-20 items-center"
+  >
+</div>

@@ -1,0 +1,20 @@
+---
+import HomeIcon from "../icons/HomeIcon.astro"
+import SearchIcon from "../icons/SearchIcon.astro"
+import SideMenuItem from "./SideMenuItem.astro"
+---
+
+<nav>
+  <div>
+    <ul class="flex flex-col gap-2">
+      <SideMenuItem href="/">
+        <HomeIcon />
+        Home
+      </SideMenuItem>
+      <SideMenuItem href="/#">
+        <SearchIcon />
+        Search
+      </SideMenuItem>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EventsPresent from '../components/EventsPresent.astro'
+import SliderEvents from '../components/SliderEvents.astro'
+
+import {events} from '../../lib/data.ts'
+
+const actualEvents = events.slice(0,10)
+const sliderEvents = events.slice(0,4)
+---
+
+<Layout title="Pagina Eventos">
+	<SliderEvents 
+		events={sliderEvents}
+	/>
+	<EventsPresent 
+		events={actualEvents} 
+		title='Proximos eventos' 
+		searchCategory="#" 
+	/>
+</Layout>
+
+<style>
+	
+</style>

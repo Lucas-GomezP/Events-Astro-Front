@@ -1,0 +1,117 @@
+---
+import AsideMenu from "../components/AsideMenu.astro"
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<div id="app" class="relative h-screen p-2 gap-2">
+			<header class="bg-zinc-800 [grid-area:header] min-h-12 rounded-lg p-4">
+				HEADER
+				<button
+					id="btn-aside-menu"
+					class="bg-green-600 p-2 relative lg:hidden "
+					onclick=""
+				>
+					Aside
+				</button>
+			</header>
+
+			<aside
+				id="aside-container"
+				class="bg-zinc-800
+				hidden row-start-2 row-end-2 col-start-1
+				lg:flex lg:flex-col lg:min-w-[280px]
+				overflow-y-auto rounded-lg p-4 top-0 bottom-0 w-full z-40"
+			>
+				<AsideMenu />
+			</aside>
+
+			<main 
+				class="bg-zinc-800 
+				col-span-3 
+				lg:[grid-area:main]
+				overflow-y-auto rounded-lg p-4"
+			>
+				<slot />
+			</main>
+		</div>
+	</body>
+</html>
+
+<style>
+	#app {
+		display: grid;
+		grid-template-areas:
+		"header header header"
+		"aside main main";
+		grid-template-columns: auto 1fr;
+		grid-template-rows: auto 1fr;
+	}
+</style>
+
+<style is:global>
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+		background-size: 224px;
+	}
+
+	/* width */
+	::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+	}
+	
+	/* Track */
+	::-webkit-scrollbar-track {
+			background: #dbe0de;
+			border-radius: 0.5rem;
+	}
+	
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+			background: rgb(82 82 91);
+			border-radius: 0.5rem;
+	}
+	
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+			background: #555;
+	}
+</style>
+
+<script>
+	const asideButton = document.getElementById('btn-aside-menu')
+	const asideContainer = document.getElementById('aside-container')
+	asideButton?.addEventListener('click', () => {
+		asideContainer?.classList.toggle('hidden')
+		asideContainer?.classList.toggle('absolute')
+		asideContainer?.classList.toggle('z-20')
+		asideContainer?.classList.toggle('col-span-3')
+	})
+
+	const btnAsideMenu = document.getElementById('btn-aside-menu')
+	window.addEventListener('resize', () => {
+		if (window.innerWidth < 1024) {
+			asideContainer?.classList.add('hidden')
+			asideContainer?.classList.remove('absolute')
+			asideContainer?.classList.remove('z-20')
+			asideContainer?.classList.remove('col-span-3')
+		}
+	})
+</script>

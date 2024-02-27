@@ -1,0 +1,29 @@
+---
+import { events } from '../../../lib/data'
+import { type Event } from '../../../lib/data'
+import { obtainAllLocations } from '../../services/obtainAllLocations'
+import { capitalizeFirstLetter } from '../../services/capitalizeFirstLetter'
+
+import Layout from '../../layouts/Layout.astro'
+import FiltereEventsPresent from '../../components/FiltereEventsPresent.astro'
+
+const {location} = Astro.params
+
+export const getStaticPaths = (() => {
+  return obtainAllLocations(events).map(l => {
+    return({params: {'location': l}})
+  })
+})
+
+// Obtenemos todos los que coincidan con la busqueda actual
+const filterEvents = events.filter(e => e.location.toLowerCase() === location)
+
+---
+
+<Layout title={`Pagina Eventos | ${capitalizeFirstLetter(location)}`}>
+  <section>
+    <h1 class="text-white text-3xl font-bold">Filtros</h1>
+    
+  </section>
+  <FiltereEventsPresent title={capitalizeFirstLetter(location)} events={filterEvents} />
+</Layout>

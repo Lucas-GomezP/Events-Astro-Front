@@ -1,0 +1,106 @@
+---
+import SlideEvent from './SlideEvent.astro'
+import LeftIcon from '../icons/LeftIcon.astro'
+import RightIcon from '../icons/RightIcon.astro'
+import type {Event} from '../../lib/data'
+
+interface Props {
+  events: Event[]
+}
+
+const {events} = Astro.props
+---
+
+<section
+  class="relative flex justify-between"
+  id="slider-container"
+>
+  <button
+    class="text-white w-fit absolute top-1/2 z-30 bg-zinc-400/50 rounded-full p-1"
+    id="left-btn"
+  >
+    <LeftIcon />
+  </button>
+  <div
+    class="relative max-h-96 w-full"
+  >
+    {
+      events.map((event, i) => <SlideEvent event={event} index={i} />)
+    }
+    <div 
+      class="absolute bottom-2 w-full z-30 flex flex-row justify-center gap-2"
+    >
+      {
+        events.map((e, i) => {
+          return (
+            <button
+              class="bg-zinc-400 bg-opacity-50 border size-4 rounded-full"
+              data-type="btn-slide"
+              data-slide-index={i}
+            >
+            </button>
+          )
+        })
+      }
+    </div>
+  </div>
+  <button
+    class="text-white w-fit absolute top-1/2 right-0 z-30 bg-zinc-400/50 rounded-full p-1"
+    id="right-btn"
+  >
+    <RightIcon />
+  </button>
+  
+</section>
+
+<script>
+  let actualSlide = 0
+  const slids = document.querySelectorAll('[data-type=slide]')
+  const btnSlids = document.querySelectorAll('[data-type=btn-slide]')
+  
+  const autoChangeSlide = () => {
+    setActualSlid(slids, 1, btnSlids)
+  }
+  let interval = setInterval(autoChangeSlide, 5000)
+  
+  const setActualSlid = (slidss: NodeListOf<Element>, slot: number, btns: NodeListOf<Element>) => {
+    actualSlide = actualSlide + slot
+    if (actualSlide > slids.length - 1) {
+      actualSlide = 0
+    }
+    if (actualSlide < 0) {
+      actualSlide = slids.length - 1
+    }
+    for (let i = 0; i < slids.length; i++) {
+      if (parseInt(slidss[i].dataset.slideIndex) === actualSlide) {
+        slidss[i].classList.remove('hidden')
+        slidss[i].classList.add('flex')
+        btns[i].classList.remove('bg-opacity-50')
+        btns[i].classList.add('bg-opacity-100')
+      } else {
+        slidss[i].classList.remove('flex')
+        slidss[i].classList.add('hidden')
+        btns[i].classList.remove('bg-opacity-100')
+        btns[i].classList.add('bg-opacity-50')
+      }
+    }
+    clearInterval(interval)
+    interval = setInterval(autoChangeSlide, 5000)
+  }
+  
+  window?.addEventListener('load', () => setActualSlid(slids, 0, btnSlids))
+  const rightBtn = document.getElementById('right-btn')
+  rightBtn?.addEventListener('click', () => setActualSlid(slids, 1, btnSlids))
+  const leftBtn = document.getElementById('left-btn')
+  leftBtn?.addEventListener('click', () => setActualSlid(slids, -1, btnSlids))
+
+  const setSlidByBtn = (index: number) => {
+    actualSlide = index
+    setActualSlid(slids, 0, btnSlids)
+  }
+
+  btnSlids.forEach(btn => {
+    const newActualSlide = parseInt(btn.dataset.slideIndex)
+    btn.addEventListener('click', () => setSlidByBtn(newActualSlide))
+  })
+</script>

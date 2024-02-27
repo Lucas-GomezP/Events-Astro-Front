@@ -1,0 +1,39 @@
+---
+import type {Event} from '../../lib/data.ts'
+import { dateFormatedMinText } from '../services/dateFormat'
+
+interface Props {
+  event: Event
+}
+
+const {event} = Astro.props
+const {id, href, name, dateStart, dateEnd, hourStart, hourEnd, description} = event
+
+const { startDateFormated, endDateFormated } = dateFormatedMinText(dateStart, dateEnd)
+
+const dateString = dateStart === dateEnd 
+                    ? `El ${startDateFormated}` 
+                    : `Del ${startDateFormated} al ${endDateFormated}`
+
+---
+
+<a 
+  href={`/event/${id}`}
+  class="flex flex-col p-2 overflow-hidden bg-zinc-700/20 rounded-lg hover:bg-zinc-700/75 transition duration-300 min-w-40 max-w-60 snap-center mb-2"
+>
+  <picture class="w-full">
+    <img 
+      src={href} 
+      alt={name} 
+      class="size-full rounded-md"
+    />
+  </picture>
+  <div class="max-w-40">
+    <h4 
+      class="text-base font-bold"
+    >
+      {name}
+    </h4>
+  </div>
+  <p class="text-sm">{dateString}</p>
+</a>

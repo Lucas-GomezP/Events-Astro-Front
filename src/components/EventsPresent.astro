@@ -1,0 +1,28 @@
+---
+import type {Event} from '../../lib/data'
+import EventCard from '../components/EventCard.astro'
+
+interface Props {
+  events: Event[]
+  title: string
+}
+
+const actualEvents = Astro.props
+
+const {events, title} = actualEvents
+---
+
+<section
+	id="main-container"
+>
+	<div class="text-white">
+		<div class="flex items-center justify-between font-bold text-3xl">
+			<h2>{title}</h2>
+		</div>
+		<div class="grid grid-flow-col gap-2 overflow-x-auto snap-x">
+			{
+				events.map(event => <EventCard event={event} />)
+			}
+		</div>
+	</div>
+</section>
