@@ -15,7 +15,7 @@ const {events, title} = actualEvents
 <section>
   <div class="text-white">
 		<div class="flex items-center justify-between font-bold text-3xl">
-			<h2>{title}</h2>
+			<h2>{title === 'All' ? 'Todos los eventos' : title}</h2>
 		</div>
 		<div class="filter-events-container gap-2 justify-items-center">
 			{

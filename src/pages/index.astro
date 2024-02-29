@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import EventsPresent from '../components/EventsPresent.astro'
-import SliderEvents from '../components/SliderEvents.astro'
+// import SliderEvents from '../components/SliderEvents.astro'
+import { SliderEvents } from '../components/SliderEvents.jsx'
 
 import {events} from '../../lib/data.ts'
 
@@ -12,11 +13,11 @@ const sliderEvents = events.slice(0,4)
 <Layout title="Pagina Eventos">
 	<SliderEvents 
 		events={sliderEvents}
+		client:visible 
 	/>
 	<EventsPresent 
 		events={actualEvents} 
-		title='Proximos eventos' 
-		searchCategory="#" 
+		title='Proximos eventos'
 	/>
 </Layout>
 

@@ -2,9 +2,11 @@
 import { events } from '../../../lib/data'
 import { createFilterParams } from '../../services/createFilterParams'
 import { capitalizeFirstLetter } from '../../services/capitalizeFirstLetter'
+import { obtainFiltersEvents } from '../../services/obtainFiltersEvents'
 
 import Layout from '../../layouts/Layout.astro'
 import FiltereEventsPresent from '../../components/FiltereEventsPresent.astro'
+import { Filter } from '../../components/Filters'
 
 export function getStaticPaths () {
   return createFilterParams(events)
@@ -16,76 +18,43 @@ const a = createFilterParams(events)
 const {year, month, city, location, tag} = Astro.params
 // RUTA: /search/all-all-all-all-all
 // Filtramos los eventos con los parametros
-const filterEvents = events.filter(e => {
-  let controlYear = false
-  if (year === 'all') {
-    controlYear = true
-  } else {
-    const startDate = new Date(e.dateStart)
-    controlYear = startDate.getFullYear().toString() === year.toString()
-  }
-
-  let controlMonth = false
-  if (month === 'all') {
-    controlMonth = true
-  } else {
-    const startDate = new Date(e.dateStart)
-    controlMonth = (startDate.getMonth() + 1).toString() === month.toString()
-  }
-
-  let controlCity = false
-  if (city === 'all') {
-    controlCity = true
-  } else {
-    controlCity = e.city.toLowerCase() === city.toLowerCase()
-  }
-
-  let controlLocation = false
-  if (location === 'all') {
-    controlLocation = true
-  } else {
-    controlLocation = e.location.toLowerCase() === location.toLowerCase()
-  }
-
-  let controlTag = false
-  if (tag === 'all') {
-    controlTag = true
-  } else {
-    const tagsNormalized = e.tags.map(t => t.toLowerCase())
-    controlTag = tagsNormalized.includes(tag)
-  }
-
-  return controlYear && controlMonth && controlCity && controlLocation && controlTag
-})
+const filterEvents = obtainFiltersEvents(events, year, month, city, location, tag)
 
 
 // TODO LO DEL FORMULARIO DE FILTROS
-import { capitalizeAllFirstLetter } from '../../services/capitalizeFirstLetter'
+// import { capitalizeAllFirstLetter } from '../../services/capitalizeFirstLetter'
 
-import { obtainAllYears } from '../../services/obtainAllYears'
-import { obtainAllMonths } from '../../services/obtainAllMonths'
-import { obtainAllCitys } from '../../services/obtainAllCitys'
-import { obtainAllLocations } from '../../services/obtainAllLocations'
-import { obtainAllTags } from '../../services/obtainAllTags'
-import { obtainLocationsFromCity } from '../../services/obtainLocationsFromCity'
+// import { obtainAllYears } from '../../services/obtainAllYears'
+// import { obtainAllMonths } from '../../services/obtainAllMonths'
+// import { obtainAllCitys } from '../../services/obtainAllCitys'
+// import { obtainAllLocations } from '../../services/obtainAllLocations'
+// import { obtainAllTags } from '../../services/obtainAllTags'
+// import { obtainLocationsFromCity } from '../../services/obtainLocationsFromCity'
 
-const allYears = obtainAllYears(events)
-const allMonths = obtainAllMonths(events)
-const allCitys = obtainAllCitys(events)
-const allLocations = obtainAllLocations(events)
-const allTags = obtainAllTags(events)
+// const allYears = obtainAllYears(events)
+// const allMonths = obtainAllMonths(events)
+// const allCitys = obtainAllCitys(events)
+// const allLocations = obtainAllLocations(events)
+// const allTags = obtainAllTags(events)
 
-allYears.push('all')
-allMonths.push('all')
-allCitys.push('all')
-allLocations.push('all')
-allTags.push('all')
+// allYears.push('all')
+// allMonths.push('all')
+// allCitys.push('all')
+// allLocations.push('all')
+// allTags.push('all')
 ---
 
 <Layout title='Pagina Eventos | Busqueda'>
-  <section>
-    <h1 class="text-white text-3xl font-bold">Filtros</h1>
-    <label for="year">Año del evento: </label>
+  <!-- <section>
+    <h1 class="text-white text-3xl font-bold">Filtros</h1> -->
+    <Filter 
+      events={events}
+      client:visible 
+      transition:name="filters" 
+      transition:persist 
+    />
+
+    <!-- <label for="year">Año del evento: </label>
     <select name="year" id="year-select">
       {
         allYears.map(year => {
@@ -133,17 +102,21 @@ allTags.push('all')
             return <option value={location}>{capitalizeAllFirstLetter(location)}</option>
           }
         })
-      }
-    </select>
+      } -->
+    <!-- </select> -->
     
-  </section>
-  <FiltereEventsPresent title={capitalizeFirstLetter(tag)} events={filterEvents} />
+  <!-- </section> -->
+  {
+    filterEvents.length === 0 
+      ? <h1 class="text-white text-3xl font-bold text-center">No se encontraron eventos con esas caracterisitcas 😭</h1>
+      : <FiltereEventsPresent title={capitalizeFirstLetter(tag)} events={filterEvents} />
+  }
 </Layout>
 
 
 
 <!-- TAMBIEN DE LOS FILTROS -->
-<script>
+<!-- <script>
   const citySelect = document.getElementById('city-select')
   const locationSelect = document.getElementById('location-select')
 
@@ -151,4 +124,4 @@ allTags.push('all')
     let actualCity
     
   })
-</script>
+</script> -->

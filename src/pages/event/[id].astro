@@ -71,7 +71,7 @@ const { startDateFormated, endDateFormated } = dateFormatedText(dateStart, dateE
         tags.map(tag => {
           return(
             <a 
-              href={`/search/${tag.toLowerCase()}`} 
+              href={`/search/all-all-all-all-${tag.toLowerCase()}`} 
               class="text-white bg-zinc-700/50 p-2 rounded-xl border-2 border-transparent hover:border-zinc-700/50 hover:bg-zinc-200 hover:text-zinc-700"
             >
               {tag}
@@ -84,13 +84,13 @@ const { startDateFormated, endDateFormated } = dateFormatedText(dateStart, dateE
       <h2 class="text-white font-semibold flex items-center text-xl gap-2"><LocationIcon /> Locación</h2>
       <div class="flex gap-2 text-zinc-400">
         <a 
-          href={`/search/${location.toLowerCase()}`}
+          href={`/search/all-all-all-${location.toLowerCase()}-all`}
           class=" hover:text-white underline"
         >
           {location}
         </a>
         <a 
-          href={`/search/${city.toLowerCase()}`}
+          href={`/search/all-all-${city.toLowerCase()}-all-all`}
           class="text-zinc-400 hover:text-white underline"
         >
           {city}

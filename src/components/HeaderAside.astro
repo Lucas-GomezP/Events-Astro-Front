@@ -1,0 +1,55 @@
+---
+import AsideMenu from './AsideMenu.astro'
+
+---
+
+<header class="bg-zinc-800 [grid-area:header] min-h-12 rounded-lg p-4">
+  HEADER
+  <button
+    id="btn-aside-menu"
+    class="bg-green-600 p-2 relative lg:hidden "
+    
+  >
+    Aside asd
+  </button>
+</header>
+
+<aside
+  id="aside-container"
+  class="bg-zinc-800
+  hidden row-start-2 row-end-2 col-start-1
+  lg:flex lg:flex-col lg:min-w-[280px]
+  overflow-y-auto rounded-lg p-4 top-0 bottom-0 w-full z-50"
+>
+  <AsideMenu />
+</aside>
+
+<script>
+	// const asideButton = document.getElementById('btn-aside-menu')
+	// const asideContainer = document.getElementById('aside-container')
+	// asideButton?.addEventListener('click', () => {
+	// 	asideContainer?.classList.toggle('hidden')
+	// 	asideContainer?.classList.toggle('absolute')
+	// 	asideContainer?.classList.toggle('z-20')
+	// 	asideContainer?.classList.toggle('col-span-3')
+	// })
+	// import { importComponent } from 'astro/components/import';
+	// const x = await importComponent('./AsideMenu.astro')
+	import { onMount } from 'astro/components'
+
+	onMount(() => {
+    // Cargar el script JavaScript
+    const script = document.createElement('script');
+    script.src = './script.js';
+    document.body.appendChild(script);
+  });
+
+	// window.addEventListener('resize', () => {
+	// 	if (window.innerWidth < 1024) {
+	// 		asideContainer?.classList.add('hidden')
+	// 		asideContainer?.classList.remove('absolute')
+	// 		asideContainer?.classList.remove('z-20')
+	// 		asideContainer?.classList.remove('col-span-3')
+	// 	}
+	// })
+</script>
